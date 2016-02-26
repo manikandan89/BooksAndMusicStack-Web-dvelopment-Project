@@ -1,0 +1,146 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-3.2.xsd  
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <context:component-scan base-package="edu.neu.project.repository.jpa"/> 
+
+     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="username" value="root"/>
+        <property name="password" value="admin"/>
+        <property name="url" value="jdbc:mysql://localhost/booksandmusicstack"/>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    </bean> 
+    
+   <bean id="myEmf"
+ class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+   <property name="dataSource" ref="dataSource" />
+    <property name="packagesToScan" value="edu.neu.project.model" /> 
+   <property name="jpaVendorAdapter">
+      <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+         <!-- <property name="showSql" value="${hibernate.show_sql}" /> -->
+         <property name="showSql" value="true" />
+         <property name="generateDdl" value="true" />
+         <!-- <property name="databasePlatform" value="${persistence.dialect}" /> -->
+          
+      </bean>
+   </property>
+</bean>
+
+
+
+<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+   <property name="entityManagerFactory" ref="myEmf" />
+</bean>
+
+<tx:annotation-driven transaction-manager="txManager" />
+<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+<!-- <tx:annotation-driven /> -->
+<context:annotation-config />
+
+ 
+<context:component-scan base-package="edu.neu.project.service.impl" /> 
+
+    
+      <!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="username" value="adminKIWiCha"/>
+        <property name="password" value="mt5biZVjGDDC"/>
+        <property name="url" value="jdbc:mysql://${env.OPENSHIFT_MYSQL_DB_HOST}:${env.OPENSHIFT_MYSQL_DB_PORT}/${env.OPENSHIFT_APP_NAME}"/>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    </bean> -->
+
+<!-- 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="username" value="adminKIWiCha"/>
+        <property name="password" value="mt5biZVjGDDC"/>
+        <property name="url" value="jdbc:mysql://127.8.26.2:3306/booksandmusicstack"/>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    </bean> -->
+
+<!--     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+         <property name="persistenceXmlLocation" value="classpath:config/persistence.xml" />
+         <property name="persistenceUnitName" value="demoRestPersistence" /> 
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+        <property name="jpaProperties">
+            <map>
+                <entry key="hibernate.hbm2ddl.auto" value="create-drop"/>
+                <entry key="hibernate.show_sql" value="true"/>
+            </map>
+        </property>
+        <property name="packagesToScan" value="edu.neu.project.model"/>
+    </bean>
+
+    	<tx:annotation-driven  />
+    
+ 
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    	 <property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean> -->
+	
+<!-- 	<tx:annotation-driven transaction-manager="transactionManager" />  
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean> -->
+         
+    <!-- <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceXmlLocation" value="classpath:resources/META-INF/persistence.xml" />
+        <property name="persistenceUnitName" value="demoRestPersistence" />        
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan" value="edu.neu.project.model" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="showSql" value="true" />
+                <property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" />
+            </bean>
+        </property>
+               <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+            </props>
+        </property>
+    </bean>     
+	 -->
+	<!-- <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="common"/>
+        <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml" />
+        <property name="packagesToScan" value="edu.neu.project.model"/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+	
+	<bean
+		class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" /> -->
+		
+<!-- 		<bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
+    <property name="entityManagerFactory" ref="entityManagerFactory"/>
+</bean>
+
+<tx:annotation-driven mode="aspectj" transaction-manager="transactionManager"/>
+    
+<bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" 
+      id="entityManagerFactory">
+    <property name="dataSource" ref="dataSource"/>
+</bean> -->
+
+ <!--    <context:component-scan base-package="edu.neu.project.service.impl"/> -->
+</beans>
